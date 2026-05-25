@@ -7,7 +7,7 @@ from sklearn.preprocessing import StandardScaler
 def main():
     # Path input dan output
     input_path = "heart_raw.csv"
-    output_dir = "heart_disease_preprocessing"
+    output_dir = "preprocessing/heart_disease_preprocessing"
     output_path = os.path.join(output_dir, "heart_preprocessing.csv")
 
     # Membaca dataset
