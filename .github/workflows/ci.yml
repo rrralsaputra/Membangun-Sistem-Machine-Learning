@@ -1,0 +1,57 @@
+name: CI MLflow Docker
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-push-docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install mlflow pandas numpy scikit-learn matplotlib
+
+      - name: Run MLflow Project Training
+        working-directory: Workflow-CI/MLProject
+        run: |
+          python modelling.py
+
+      - name: Upload Model Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: mlflow-model-artifacts
+          path: |
+            Workflow-CI/MLProject/model
+            Workflow-CI/MLProject/artifacts
+
+      - name: Build Docker Image with MLflow
+        working-directory: Workflow-CI/MLProject
+        run: |
+          mlflow models build-docker -m model -n heart-disease-model
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Tag Docker Image
+        run: |
+          docker tag heart-disease-model ${{ secrets.DOCKER_USERNAME }}/heart-disease-model:latest
+
+      - name: Push Docker Image to Docker Hub
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/heart-disease-model:latest
