@@ -26,10 +26,18 @@ jobs:
 
       - name: Run Data Preprocessing
         run: |
+<<<<<<< HEAD
           python Eksperimen_SML_Muhammad_Geralldo/preprocessing/automate_muhammadgeralldo.py
+=======
+          python preprocessing/automate_muhammadgeralldo.py
+>>>>>>> d2661d667759d5f975b0fa51e4bf968cc1f6c71b
 
       - name: Upload Preprocessed Dataset
         uses: actions/upload-artifact@v4
         with:
           name: preprocessed-dataset
+<<<<<<< HEAD
           path: Eksperimen_SML_Muhammad_Geralldo/preprocessing/heart_disease_preprocessing/heart_preprocessing.csv
+=======
+          path: preprocessing/heart_disease_preprocessing/heart_preprocessing.csv
+>>>>>>> d2661d667759d5f975b0fa51e4bf968cc1f6c71b
